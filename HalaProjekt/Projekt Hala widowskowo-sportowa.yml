@@ -1,0 +1,41 @@
+Projekt Hala widowskowo-sportowa
+
+API do aplikacji obsulugjacej halę widowiskowo- sportowej
+
+
+
+Funkcjonalności:
+
+1. Hala - CRUD danych hali,
+2. Wydarzenia - CRUD wydarzeń, lista, wyszukiwanie nieodbytych wydarzeń, raport ilości osób na wydarzeniu,  
+3. 
+
+
+Modele danych:
+
+Hala:
+    - nazwa
+    - adres
+    - telefon
+    - nip
+    - regon 
+    - email
+    - www
+
+Wydarzenie:
+    - nazwa
+    - artysta (nie zawsze jest)
+    - iloscOsob
+    - data
+    - bilet
+    - status (nadchodzące/odbyte)
+
+Bilet:
+    - id
+    - cena
+    - sektor
+    - cena
+
+Sektor:
+    - numer
+    - miejsce
