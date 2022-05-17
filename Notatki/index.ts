@@ -3,10 +3,29 @@ import express from 'express'
 import {Request, Response} from 'express'
 import { title } from 'process'
 import { json } from 'stream/consumers'
+import fs, { read } from 'fs'
 
 const app = express()
 
 app.use(express.json())
+
+async function readStorage(): Promise<void> {
+    try {
+        notesArray = JSON.parse(await fs.promises.readFile("./storage/notes.json", 'utf-8'))
+        
+    } catch (err) {
+        console.log(err)
+    }
+}
+
+async function updateStorage(): Promise<void> {
+    try {
+        await fs.promises.writeFile("./storage/notes.json", JSON.stringify(notesArray))
+       
+    } catch (err) {
+        console.log(err)
+    }
+}
 
 
 
@@ -25,8 +44,10 @@ interface Tag{
     id?: number
     name: string
 }
-const notesArray: Note[] = []
-const tagsArray: Tag[] = []
+let notesArray: Note[] = []
+let tagsArray: Tag[] = []
+
+readStorage()
 
 app.post('/note', function(req: Request, res:Response){
     
@@ -42,8 +63,10 @@ app.post('/note', function(req: Request, res:Response){
         id: generateId
 
     }
-    notesArray.push(note)
 
+    
+    notesArray.push(note)
+    updateStorage()
     res.send(note)
     
 })
@@ -87,6 +110,9 @@ app.get('/tag/:id',function(req:Request, res:Response){
     res.send(notesArray.find(tag=>tag.id==id))
     else
     res.status(404).send("no exist")
+})
+app.get('/tags', function(req:Request, res:Response){
+    res.send(tagsArray);
 })
 
 app.listen(3000)
