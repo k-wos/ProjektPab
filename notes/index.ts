@@ -30,7 +30,7 @@ app.get('/note/:id', function (req: Request, res: Response) {
 })
 app.get('/note', function (req: Request, res: Response) {
     if (!req.headers.authorization)
-        return res.status(401).send("wymagane logowanie")
+        return res.status(401).send("wymagane logowanieww")
     if (!storageHandle.VerifyToken(User.DecodeHeader(req.headers.authorization)))
         return res.status(401).send("wymagane logowanie")
     let filteredNotes = storageHandle.notes.filter(function (note: Note) {
