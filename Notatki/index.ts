@@ -4,6 +4,7 @@ import {Request, Response} from 'express'
 import { title } from 'process'
 import { json } from 'stream/consumers'
 import fs, { read } from 'fs'
+import jwt from 'jsonwebtoken'
 
 const app = express()
 
@@ -12,6 +13,8 @@ app.use(express.json())
 async function readStorage(): Promise<void> {
     try {
         notesArray = JSON.parse(await fs.promises.readFile("./storage/notes.json", 'utf-8'))
+        tagsArray = JSON.parse(await fs.promises.readFile("./storage/tags.json", 'utf-8'))
+        usersArray = JSON.parse(await fs.promises.readFile("./storage/users.json", 'utf-8'))
         
     } catch (err) {
         console.log(err)
@@ -21,6 +24,8 @@ async function readStorage(): Promise<void> {
 async function updateStorage(): Promise<void> {
     try {
         await fs.promises.writeFile("./storage/notes.json", JSON.stringify(notesArray))
+        await fs.promises.writeFile("./storage/tags.json", JSON.stringify(tagsArray))
+        await fs.promises.writeFile("./storage/users.json", JSON.stringify(usersArray))
        
     } catch (err) {
         console.log(err)
@@ -44,8 +49,16 @@ interface Tag{
     id?: number
     name: string
 }
+
+interface User{
+    login: string
+    password: string
+    token: string
+}
+
 let notesArray: Note[] = []
 let tagsArray: Tag[] = []
+let usersArray: User[] = []
 
 readStorage()
 
