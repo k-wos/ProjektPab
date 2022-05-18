@@ -1,12 +1,13 @@
 import express from 'express'
 import mongoose, { ConnectOptions } from 'mongoose'
-import { hallRouter } from './routes/hallRoute'
+import * as hallRouter from './routes/hallRoute'
+
 
 
 const app = express()
 
 app.use(express.json())
-app.use(hallRouter)
+
 
 mongoose.connect('mongodb://localhost:27017/Hall',{
     useCreateIndex: true,
@@ -15,5 +16,6 @@ mongoose.connect('mongodb://localhost:27017/Hall',{
 }as ConnectOptions, () => {
     console.log('connected to db')
 })
+app.get('/hall', hallRouter.getHall)
 
 app.listen(3000)

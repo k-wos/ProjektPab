@@ -40,6 +40,19 @@ const hallSchema = new mongoose.Schema({
     }
 })
 
+
 const Hall = mongoose.model('Hall', hallSchema)
+
+new Hall({
+    name: 'Hala Widowiskowo-Sportowa xxx',
+    address: 'ul. xxxxxxxx x 00-000 xxxxxx',
+    phone: '000000000',
+    nip: '8321732663321',
+    regon: '829316732',
+    email:'xxxxxxxxx@xx.xx',
+    www: 'xxx.xxxxxxx.xxx'
+
+})
+
 
 export {Hall}

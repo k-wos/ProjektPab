@@ -1,13 +1,16 @@
 import express, {Request, Response} from 'express'
+import {Hall} from './../models/Hall'
 
-const router = express.Router()
 
-router.get('/hall', (req, res) => {
-    return res.send('Hall')
+
+export let getHall = ((req:Request, res:Response) => {
+    let hall = JSON.stringify(Hall)
+    return res.send(hall)
 })
 
-router.post('/hall', (req: Request, res: Response) => {
-    return res.send('new hall created')
+export let createHall = ((req: Request, res: Response) => {
+    
+    return res.send('hall')
 })
 
-export {router as hallRouter}
+
