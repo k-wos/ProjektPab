@@ -1,6 +1,7 @@
 import exp from 'constants'
 import {Request, Response} from 'express'
-import mongoose from 'mongoose'
+import { Db } from 'mongodb'
+import mongoose, {Document, Model} from 'mongoose'
 
 /*
 export interface Hall{
@@ -40,19 +41,17 @@ const hallSchema = new mongoose.Schema({
     }
 })
 
+export interface IHall{
+    name: string
+    address: string
+    phone: string
+    nip: string
+    regon: string
+    email: string
+    www: string
+    }
 
-const Hall = mongoose.model('Hall', hallSchema)
-
-new Hall({
-    name: 'Hala Widowiskowo-Sportowa xxx',
-    address: 'ul. xxxxxxxx x 00-000 xxxxxx',
-    phone: '000000000',
-    nip: '8321732663321',
-    regon: '829316732',
-    email:'xxxxxxxxx@xx.xx',
-    www: 'xxx.xxxxxxx.xxx'
-
-})
+const Arena = mongoose.model('Hall', hallSchema)
 
 
-export {Hall}
+export {Arena}
