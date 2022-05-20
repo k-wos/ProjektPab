@@ -41,17 +41,31 @@ const hallSchema = new mongoose.Schema({
     }
 })
 
-export interface IHall{
-    name: string
-    address: string
-    phone: string
-    nip: string
-    regon: string
-    email: string
-    www: string
-    }
 
-const Arena = mongoose.model('Hall', hallSchema)
+const Hall = mongoose.model('Hall', hallSchema)
+
+/*export const newHall = new Hall({
+    name: 'Hala Widowiskowo-Sportowa xxx',
+    address: 'ul. xxxxxxxx x 00-000 xxxxxx',
+    phone: '000000000',
+    nip: '8321732663321',
+    regon: '829316732',
+    email:'xxxxxxxxx@xx.xx',
+    www: 'xxx.xxxxxxx.xxx'
+
+})
+
+newHall.save().then(()=> {
+    console.log("Hala zostala zapisana")
+    
+}
+)
+*/
 
 
-export {Arena}
+
+
+
+
+
+export {Hall}
