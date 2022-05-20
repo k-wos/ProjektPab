@@ -9,7 +9,7 @@ const app = express()
 
 app.use(express.json())
 
-const mongoDB = 'mongodb+srv://admin:<Qwertyuiop>@cluster0.ka3wh.mongodb.net/?retryWrites=true&w=majority'
+const mongoDB = 'mongodb+srv://admin:<Qwertyuiop>@cluster0.ka3wh.mongodb.net/?retryWrites=true&w=majority/HallDb'
 
 
 mongoose.connect(mongoDB,{
