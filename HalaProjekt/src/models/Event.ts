@@ -15,7 +15,7 @@ export interface Event{
 */
 const eventSchema = new mongoose.Schema({
     id:{
-        type: String
+        type: Number
     },
     name:{
         type: String,
@@ -23,7 +23,8 @@ const eventSchema = new mongoose.Schema({
 
     },
     artist:{
-        type: String
+        type: String,
+        required: false
     },
     numberOfPeople:{
         type: Number
@@ -35,9 +36,6 @@ const eventSchema = new mongoose.Schema({
         type: String
     },
     status:{
-        type: String
-    },
-    www:{
         type: String
     }
 })

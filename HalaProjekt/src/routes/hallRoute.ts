@@ -1,22 +1,25 @@
 import express, {Request, Response} from 'express'
 import {Hall} from './../models/Hall'
+import { MongoClient } from 'mongodb' 
+import * as dotenv from 'dotenv'
+import * as mongoose from 'mongoose'
 
 
 const hallFunctions =  require('../functions/hallFunctions')
 const router = express.Router()
 
-/*export let getHall = ((req:Request, res:Response) => {
-    console.log('ddd')
+
+
+router.use(express.json())
+
+
     
     
-})*/
+
 
 router.get('/hall', hallFunctions.getHall)
 
-export let createHall = ((req: Request, res: Response) => {
-    
-    return res.send('hall')
-})
+router.post('/hall',hallFunctions.addHall)
 
 module.exports = router
 

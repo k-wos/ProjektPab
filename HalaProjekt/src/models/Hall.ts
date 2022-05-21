@@ -1,10 +1,13 @@
 import exp from 'constants'
 import {Request, Response} from 'express'
-import { Db } from 'mongodb'
+import { Db, ObjectId } from 'mongodb'
 import mongoose, {Document, Model} from 'mongoose'
+import * as mongo from 'mongodb'
 
-/*
-export interface Hall{
+
+
+
+/*export interface Hall{
     name: string
     address: string
     phone: string
@@ -17,7 +20,10 @@ export interface Hall{
     }
 */
 
-const hallSchema = new mongoose.Schema({
+export const hallSchema = new mongoose.Schema({
+    id:{
+        type: ObjectId
+    },
     name:{
         type: String
     },
@@ -59,8 +65,9 @@ newHall.save().then(()=> {
     console.log("Hala zostala zapisana")
     
 }
-)
-*/
+)*/
+
+
 
 
 
