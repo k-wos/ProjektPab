@@ -9,7 +9,7 @@ class eventFunctions{
         
         
         
-        const{ id, name, artist,date, numberOfPeople, ticket, status} = req.body
+        const{ id, name, artist,date, numberOfPeople, status} = req.body
 
         const event = new Event({
            id: Date.now(),
@@ -17,7 +17,6 @@ class eventFunctions{
            artist,
            date: newDate,
            numberOfPeople,
-           ticket,
            status
             
         })

@@ -32,9 +32,7 @@ const eventSchema = new mongoose.Schema({
     date:{
         type: String
     },
-    ticket:{
-        type: String
-    },
+    
     status:{
         type: String
     }

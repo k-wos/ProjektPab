@@ -3,6 +3,7 @@ import mongoose, { ConnectOptions } from 'mongoose'
 import { runInNewContext } from 'vm'
 //import * as hallRouter from './routes/hallRoute'
 import {Hall} from './models/Hall'
+import { Ticket } from './models/Ticket'
 
 
 require('./models/Hall.ts')
@@ -10,7 +11,7 @@ require('dotenv').config()
 
 const hallRouter = require('./routes/hallRoute')
 const eventRouter = require('./routes/eventRoute')
-
+const ticketRouter = require('./routes/ticketRoute')
 
 const app = express()
 
@@ -31,6 +32,7 @@ mongoose.connect(mongoDB,).then(()=>{
 //app.get('/hall', hallRouter.getHall)
 app.use('/',hallRouter)
 app.use('/',eventRouter)
+app.use('/',ticketRouter)
 
 app.listen(3000)
 
