@@ -12,5 +12,8 @@ router.use(express.json())
 
 router.post('/event',eventFunctions.addEvent)
 router.get('/event', eventFunctions.getAllEvents)
+router.get('/event/:id', eventFunctions.getEventById)
+router.put('/event/:id', eventFunctions.editEvent)
+router.delete('/event/:id', eventFunctions.deleteEvent)
 
-module.exports = router
+export default router

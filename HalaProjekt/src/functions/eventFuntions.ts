@@ -31,5 +31,42 @@ class eventFunctions{
 
     }
 
+    async getEventById(req:Request, res:Response){
+        const event = await Event.findOne({id: req.params.id})
+        if(event)
+            return res.send(event)
+        else
+            return res.status(404).send("Nie istnieje wydarzenie o takim id")
+    }
+
+    async editEvent(req:Request, res:Response){
+        const findEvent = await Event.findOne({id: req.params.id})
+
+        if(findEvent){
+            try {
+                const updateEvent = await Event.updateOne({id: req.params.id},req.body)
+                return res.send("Wydarzenie zostało pomyślnie zaktualizowane")
+            } catch(err){
+                return res.status(400).send(err)
+            }
+        }
+        else
+            return res.status(404).send("Nie istnieje wydarzenie o takim id")
+    }
+    async deleteEvent(req:Request, res:Response){
+        const findEvent = await Event.findOne({id: req.params.id})
+
+        if(findEvent){
+            try {
+                const updateEvent = await Event.deleteOne({id: req.params.id},req.body)
+                return res.send("Wydarzenie zostało pomyślnie usunięte")
+            } catch(err){
+                return res.status(400).send(err)
+            }
+        }
+        else
+            return res.status(404).send("Nie istnieje wydarzenie o takim id")
+    }
+
 }
 module.exports = new eventFunctions()

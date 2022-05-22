@@ -17,8 +17,9 @@ router.use(express.json())
     
 
 
-router.get('/event/ticket', ticketFunctions.genereTicket)
+router.get('/event/:id/:name/ticket', ticketFunctions.genereTicket)
 
 
 
-module.exports = router
+//module.exports = router 
+export default router

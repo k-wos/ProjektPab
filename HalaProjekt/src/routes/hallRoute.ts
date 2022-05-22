@@ -21,6 +21,6 @@ router.get('/hall', hallFunctions.getHall)
 
 router.post('/hall',hallFunctions.addHall)
 
-module.exports = router
+export default router
 
 
