@@ -16,6 +16,7 @@ class ticketFunctions{
         const eventName = req.params.name
         let sectorForTicket 
         const findEvent = await Event.findOne({id: req.params.id, name:req.params.name})
+       
         
         
         if(findEvent){
