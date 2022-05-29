@@ -8,7 +8,8 @@ import hallRouter from './routes/hallRoute'
 import eventRouter from './routes/eventRoute'
 import ticketRouter from './routes/ticketRoute'
 import employeeRouter from './routes/employeeRoute'
-import cateringRouter from './routes/cateringRoute'
+import userRouter from './routes/userRoute'
+
 
 
 
@@ -37,7 +38,8 @@ app.use('/',hallRouter)
 app.use('/',eventRouter)
 app.use('/',ticketRouter)
 app.use('/',employeeRouter)
-app.use('/',cateringRouter)
+app.use('/',userRouter)
+
 
 app.listen(3000)
 

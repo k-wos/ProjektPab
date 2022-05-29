@@ -10,5 +10,7 @@ router.use(express.json())
 router.post('/employee', employeeFunctions.addEmployee)
 router.get('/employee',employeeFunctions.getAllEmployees)
 router.get('/employee/:position', employeeFunctions.getEmployeesByPosition)
+router.put('/employee/:id', employeeFunctions.editEmployee)
+router.delete('/employee/:id', employeeFunctions.deleteEmployee)
 
 export default router
