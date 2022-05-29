@@ -1,4 +1,4 @@
-import express, {Request, Response} from 'express'
+import express, {NextFunction, Request, Response} from 'express'
 import { Collection, mongo } from 'mongoose'
 import {User} from './../models/User'
 import bcrypt, { hash } from 'bcrypt'
@@ -59,13 +59,15 @@ class userFunctions{
         }
     }
 
-    verifyUser(req: Request, res: Response){
+    verifyUser(req: Request,res: Response,next: NextFunction){
         const token = req.headers.authorization?.split(' ')[1]
 
         if(!token){
             return res.status(403).send('Token jest wymagany')
         }
          jwt.verify(token, TOKEN_KEY)
+         next()
+         
        
     }
 }
