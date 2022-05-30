@@ -12,8 +12,7 @@ class ticketFunctions{
 
     async genereTicket(req:Request, res:Response){
 
-        const eventId = req.params.id
-        const eventName = req.params.name
+        
         let sectorForTicket 
         const findEvent = await Event.findOne({id: req.params.id, name:req.params.name})
        
@@ -28,13 +27,18 @@ class ticketFunctions{
             row: Math.floor(Math.random()*(200 - 0 +1)+0),
             place: Math.floor(Math.random()*(200 - 0 +1)+0),
             forWhatEvent: {
-                id: req.params.id,
-                name: req.params.name
+                id: findEvent.id,
+                name: findEvent.name,
+                artist: findEvent.artist,
+                date: findEvent.date
                 
             }
             
+            
 
         })
+        let noPeople = findEvent.numberOfPeople + 1
+         await Event.updateOne({id: req.params.id}, {numberOfPeople: noPeople})
         
         await ticket.save()
         return res.send(ticket)

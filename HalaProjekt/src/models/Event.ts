@@ -27,7 +27,8 @@ const eventSchema = new mongoose.Schema({
         required: false
     },
     numberOfPeople:{
-        type: Number
+        type: Number,
+        default:0
     },
     date:{
         type: String

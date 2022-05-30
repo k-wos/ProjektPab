@@ -55,7 +55,14 @@ class userFunctions{
         const user = await User.findOne({email})
 
         if(user && (await bcrypt.compare(password, user.password))){
-            res.status(200).send(user.token)
+            //res.status(200).send(user.token)
+            const token = jwt.sign(req.body, TOKEN_KEY,{
+                expiresIn: "24h"
+            })
+            return res.status(200).send(token)
+        }
+        else{
+            res.status(409).send("Błędne hasło")
         }
     }
 
