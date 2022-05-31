@@ -9,9 +9,7 @@ const ticketSchema = new mongoose.Schema({
     price:{
         type: Decimal128
     },
-    sector:{
-        type: Number
-    },
+    
     row:{
         type: Number
     },

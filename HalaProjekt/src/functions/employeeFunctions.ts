@@ -1,4 +1,5 @@
 import express, {Request,Response} from "express"
+import { employeeValidator, options } from "../validation/validation"
 import{Employee} from './../models/Employees'
 class employeeFunctions{
 
@@ -12,6 +13,10 @@ class employeeFunctions{
             surname,
             position
         })
+        const {error} = employeeValidator.validate(employee, options)
+        if(error){
+          return res.status(400).send(error.details[0].message)
+        }
 
         await employee.save()
         res.status(201).send(employee)

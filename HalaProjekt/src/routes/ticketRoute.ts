@@ -17,7 +17,8 @@ router.use(express.json())
     
 
 
-router.get('/event/:id/:name/ticket', ticketFunctions.genereTicket)
+router.post('/event/:id/ticket', ticketFunctions.createTicket)
+router.get('/ticket/:id', ticketFunctions.generateTicket)
 
 
 

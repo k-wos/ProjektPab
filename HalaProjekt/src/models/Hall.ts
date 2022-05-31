@@ -31,7 +31,8 @@ export const hallSchema = new mongoose.Schema({
         type: String
     },
     phone:{
-        type: String
+        type: String,
+       
     },
     nip:{
         type: String

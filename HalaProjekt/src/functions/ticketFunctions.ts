@@ -1,31 +1,36 @@
 import express, {Request, Response} from 'express'
 import { Ticket} from '../models/Ticket'
 import{Event} from '../models/Event'
+import fs from 'fs'
 
-function randomSector(): number{
-    return Math.floor(Math.random()*(200 - 0 +1)+0)
-}
+
+
 
 class ticketFunctions{
 
     
 
-    async genereTicket(req:Request, res:Response){
+    async createTicket(req:Request, res:Response){
 
+        const{place, row} = req.body
         
-        let sectorForTicket 
-        const findEvent = await Event.findOne({id: req.params.id, name:req.params.name})
-       
+        const findEvent = await Event.findOne({id: req.params.id})
+        if(!findEvent){
+            return res.status(404).send("Nie mozna zakupic biletu na nieistniejace wydarzenie")
+        }
+        else{
+        const findTicketPlace = await Ticket.findOne({place: place, row:row})
         
-        
-        if(findEvent){
+        if(findTicketPlace){
+            res.status(400).send('Miejsce jest zajęte')
+        }
+        else{
         
         const ticket = new Ticket({
             id: Date.now(),
             price: Math.floor(Math.random()*(200 - 0 +1)+0),
-            sector: randomSector(),
-            row: Math.floor(Math.random()*(200 - 0 +1)+0),
-            place: Math.floor(Math.random()*(200 - 0 +1)+0),
+            row,
+            place,
             forWhatEvent: {
                 id: findEvent.id,
                 name: findEvent.name,
@@ -43,9 +48,24 @@ class ticketFunctions{
         await ticket.save()
         return res.send(ticket)
     }
-    else 
-        return res.status(404).send("Nie mozna zakupic biletu na nieistniejace wydarzenie")
+    
+        
     }
 }
+
+    async generateTicket(req:Request, res:Response){
+        const findTicket = await Ticket.findOne({id: req.params.id})
+
+         fs.writeFile(req.params.id + " ticket.txt", JSON.stringify(findTicket), function(err){
+            if(err){
+                return console.log("error")
+            }
+        })
+       return  res.send(findTicket)
+    }
+}
+
+
+
 
 module.exports = new ticketFunctions()

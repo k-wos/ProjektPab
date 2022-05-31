@@ -26,9 +26,10 @@ class eventFunctions{
         }
 
     async getAllEvents(req:Request, res:Response){
+        
         const event = await Event.find({})
         return res.status(200).send(event)
-
+      
     }
 
     async getEventById(req:Request, res:Response){
