@@ -28,7 +28,21 @@ class employeeFunctions{
 
     async getEmployeesByPosition(req:Request, res:Response){
         const employee = await Employee.find({position: req.params.position}) 
+        if(employee){
         res.send(employee)
+        }
+        else{
+            return res.status(404).send("Nie znaleziono takiego stanowiska")
+        }
+    }
+    async getEmployeesById(req:Request, res:Response){
+        const employee = await Employee.find({id: req.params.id}) 
+        if(employee){
+        res.send(employee)
+        }
+        else{
+            return res.status(404).send("Nie znaleziono takiego pracownika")
+        }
     }
     async editEmployee(req:Request, res: Response){
         const findEmployee = await Employee.findOne({id: req.params.id})
@@ -51,7 +65,7 @@ class employeeFunctions{
 
         if(findEmployee){
             try{
-                const updateEmployee = await Employee.updateOne({id: req.params.id}, req.body)
+                const updateEmployee = await Employee.deleteOne({id: req.params.id}, req.body)
                 return res.send("Dane pracownika zostały usunięte")
             }
             catch (err){

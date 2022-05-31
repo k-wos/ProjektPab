@@ -67,10 +67,11 @@ class ticketFunctions{
 
     async returnTicket(req:Request, res:Response){
         const findTicket = await Ticket.findOne({id: req.params.id})
-        const findEvent = await Event.findOne({id: findTicket.forWhatEvent[0].id})
+        
 
         if(findTicket){
             try {
+                const findEvent = await Event.findOne({id: findTicket.forWhatEvent[0].id})
                 const deleteTIcket = await Ticket.deleteOne({id: req.params.id})
                 let noPeople = findEvent.numberOfPeople - 1
                 await Event.updateOne({id: findTicket.forWhatEvent[0].id}, {numberOfPeople: noPeople})

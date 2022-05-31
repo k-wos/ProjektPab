@@ -1,5 +1,6 @@
 import express, {Request, Response} from 'express'
 import {Event} from './../models/Event'
+import{eventValidator, options} from '../validation/validation'
 
 
 class eventFunctions{
@@ -20,6 +21,10 @@ class eventFunctions{
            status
             
         })
+        const {error} = eventValidator.validate(event, options)
+            if(error){
+              return res.status(400).send(error.details[0].message)
+            }
 
         await event.save()
         return res.status(201).send(event)
@@ -68,6 +73,8 @@ class eventFunctions{
         else
             return res.status(404).send("Nie istnieje wydarzenie o takim id")
     }
+
+    
 
 }
 module.exports = new eventFunctions()

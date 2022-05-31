@@ -17,6 +17,13 @@ export const hallValidator = Joi.object({
     www: Joi.string()
 })
 
+export const eventValidator = Joi.object({
+    name: Joi.string().required(),
+    artist: Joi.string(),
+    numberOfPeople: Joi.number().default(0),
+    date:Joi.string()
+})
+
 export const employeeValidator = Joi.object({
     name: Joi.string().required(),
     surname: Joi.string().required(),

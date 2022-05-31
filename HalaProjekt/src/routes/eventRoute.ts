@@ -18,4 +18,5 @@ router.get('/event/:id', eventFunctions.getEventById)
 router.put('/event/:id',  eventFunctions.editEvent)
 router.delete('/event/:id', eventFunctions.deleteEvent)
 
+
 export default router
