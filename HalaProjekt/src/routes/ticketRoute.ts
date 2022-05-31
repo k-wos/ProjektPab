@@ -19,6 +19,7 @@ router.use(express.json())
 
 router.post('/event/:id/ticket', ticketFunctions.createTicket)
 router.get('/ticket/:id', ticketFunctions.generateTicket)
+router.delete('/ticket/:id',ticketFunctions.returnTicket)
 
 
 

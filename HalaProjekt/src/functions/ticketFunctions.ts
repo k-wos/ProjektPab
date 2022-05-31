@@ -56,6 +56,7 @@ class ticketFunctions{
     async generateTicket(req:Request, res:Response){
         const findTicket = await Ticket.findOne({id: req.params.id})
 
+
          fs.writeFile(req.params.id + " ticket.txt", JSON.stringify(findTicket), function(err){
             if(err){
                 return console.log("error")
@@ -63,7 +64,25 @@ class ticketFunctions{
         })
        return  res.send(findTicket)
     }
-}
+
+    async returnTicket(req:Request, res:Response){
+        const findTicket = await Ticket.findOne({id: req.params.id})
+        const findEvent = await Event.findOne({id: findTicket.forWhatEvent[0].id})
+
+        if(findTicket){
+            try {
+                const deleteTIcket = await Ticket.deleteOne({id: req.params.id})
+                let noPeople = findEvent.numberOfPeople - 1
+                await Event.updateOne({id: findTicket.forWhatEvent[0].id}, {numberOfPeople: noPeople})
+                return res.send("bilet został zwrócony")
+            } catch(err){
+                return res.status(400).send(err)
+            }
+        }
+        else
+            return res.status(404).send("Nie istnieje taki bilet")
+    }
+    }
 
 
 
