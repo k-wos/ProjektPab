@@ -22,7 +22,7 @@ import * as mongo from 'mongodb'
 
 export const hallSchema = new mongoose.Schema({
     id:{
-        type: ObjectId
+        type: Number
     },
     name:{
         type: String

@@ -20,8 +20,9 @@ class hallFunctions{
         const{name, address, phone, nip, regon, email, www} = req.body
         
         const hall = new Hall({
-            name,
-             address,
+              id:Date.now(),
+              name,
+              address,
               phone, 
               nip, 
               regon, 
@@ -37,6 +38,34 @@ class hallFunctions{
         await hall.save()
         return res.status(201).send(hall)
     }
+    async editHall(req:Request, res:Response){
+      const findHall = await Hall.findOne({id: req.params.id})
+
+      if(findHall){
+          try {
+              const updateEvent = await Hall.updateOne({id: req.params.id},req.body)
+              return res.send("Hala została pomyślnie zaktualizowana")
+          } catch(err){
+              return res.status(400).send(err)
+          }
+      }
+      else
+          return res.status(404).send("Nie istnieje wydarzenie o takim id")
+  }
+  async deleteHall(req:Request, res:Response){
+      const findHall = await Hall.findOne({id: req.params.id})
+
+      if(findHall){
+          try {
+              const updateEvent = await Hall.deleteOne({id: req.params.id},req.body)
+              return res.send("Hala została pomyślnie usunięta")
+          } catch(err){
+              return res.status(400).send(err)
+          }
+      }
+      else
+          return res.status(404).send("Nie istnieje hala o takim id")
+  }
 }
 
 module.exports = new hallFunctions()

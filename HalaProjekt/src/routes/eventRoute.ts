@@ -12,11 +12,11 @@ const router = express.Router()
 
 router.use(express.json())
 
-router.post('/event',eventFunctions.addEvent)
+router.post('/event',userAuth.verifyUser,eventFunctions.addEvent)
 router.get('/event', eventFunctions.getAllEvents)
 router.get('/event/:id', eventFunctions.getEventById)
-router.put('/event/:id',  eventFunctions.editEvent)
-router.delete('/event/:id', eventFunctions.deleteEvent)
+router.put('/event/:id',userAuth.verifyUser,  eventFunctions.editEvent)
+router.delete('/event/:id',userAuth.verifyUser, eventFunctions.deleteEvent)
 
 
 export default router
