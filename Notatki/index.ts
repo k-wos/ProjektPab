@@ -1,131 +1,262 @@
-import { time } from 'console'
+import { notStrictEqual } from 'assert'
+import { Console } from 'console'
 import express from 'express'
-import {Request, Response} from 'express'
-import { title } from 'process'
-import { json } from 'stream/consumers'
-import fs, { read } from 'fs'
-import jwt from 'jsonwebtoken'
+import { Request, Response } from 'express'
+import { normalize } from 'path'
+import { Note } from './models/note'
+import { storagee } from './storage/storage'
+import { Tag } from './models/tag'
+import { User } from './models/user'
+
+let storage = new storagee
 
 const app = express()
-
 app.use(express.json())
-
-async function readStorage(): Promise<void> {
-    try {
-        notesArray = JSON.parse(await fs.promises.readFile("./storage/notes.json", 'utf-8'))
-        tagsArray = JSON.parse(await fs.promises.readFile("./storage/tags.json", 'utf-8'))
-        usersArray = JSON.parse(await fs.promises.readFile("./storage/users.json", 'utf-8'))
-        
-    } catch (err) {
-        console.log(err)
-    }
-}
-
-async function updateStorage(): Promise<void> {
-    try {
-        await fs.promises.writeFile("./storage/notes.json", JSON.stringify(notesArray))
-        await fs.promises.writeFile("./storage/tags.json", JSON.stringify(tagsArray))
-        await fs.promises.writeFile("./storage/users.json", JSON.stringify(usersArray))
-       
-    } catch (err) {
-        console.log(err)
-    }
-}
+const date = new Date()
 
 
 
-interface Note{
-    title: string
-    content: string
-    createDate?: string
-    tags?: Tag[]
-    id?: number
-
+function auth(token:string):boolean
+{
+  console.log(token)
+  const user = storage.users.find(user => user.token == token)
+  console.log(user)
+  console.log(token)
+  if(user){return true}
+  else{return false}
     
-
 }
 
-interface Tag{
-    id?: number
-    name: string
-}
 
-interface User{
-    login: string
-    password: string
-    token: string
-}
-
-let notesArray: Note[] = []
-let tagsArray: Tag[] = []
-let usersArray: User[] = []
-
-readStorage()
-
-app.post('/note', function(req: Request, res:Response){
+app.get('/notes', function (req: Request, res: Response) //get list ofdx all notes
+{
+  if(auth(req.headers.authorization ?? "123")){
+  try {
     
-    const date = new Date().toISOString()
+    
+    res.status(200).send(storage.notes)
 
-    const generateId = Date.now()
+  } catch {
+    res.status(400).send("Wymagane pola notatki są puste")
+  }
+  }
+  else 
+  {
+    res.status(401).send("Token wygasł lub nie istnieje")
+  }
+})
+app.get('/note', function (req: Request, res: Response) { //get test note
+  if(auth(req.headers.authorization ?? "123")){
+  var x = storage.notes.find(function (note: Note) {
+    if (note.title == 'TestTitle') {
+      console.log("test note was found")
+      return true
+    }
+    else {
+      console.log("test note wan't found")
+      return false
+    }
+  })
+  res.send(x)
+}
+else{
+  res.send(401).send("Token wygasł lub nie istnieje")
+}
+})
 
-    const note: Note ={
+app.get('/note/:id', function (req: Request, res: Response) { //get note by id
+  if(auth(req.headers.authorization ?? "123")){
+  var thisNoteId: number = +req.params.id
+  const note = storage.notes.find(note => note.id == thisNoteId)
+  note ?? res.send(404)
+  res.status(200).send(note)
+  }
+  else{
+    res.send(401).send("Token wygasł lub nie istnieje")
+  }
+})
+app.post('/note', function (req: Request, res: Response) { //add new note
+  if(auth(req.headers.authorization ?? "123")){
+  if (req.body.title && req.body.content) {
+
+    const date = new Date()
+    const thisnote: Note = new Note
+      ({
         title: req.body.title,
         content: req.body.content,
-        createDate: date,
-        tags: req.body.tags,
-        id: generateId
+        createDate: date.toISOString(),
+        tags: storage.tags,  //temp
+        id: Date.now()
+      })
+      storage.Store(thisnote)
+    res.status(200).send(thisnote)
+  }
+  else {
+    res.status(400).send("Wymagane pola notatki są puste")
+  }
+}
+else{
+  res.send(401).send("Token wygasł lub nie istnieje")
+}
 
+})
+app.put('/note/:id', function (req: Request, res: Response)//change title of note
+
+{
+  if(auth(req.headers.authorization ?? "123")){
+  var thisNoteId: number = +req.params.id
+  let note = storage.notes.find(note => note.id == thisNoteId)
+  if (!note)
+    return res.status(404)
+  note.title = req.body.newtitle
+
+  res.status(200).send(note)
+  }
+  else{
+    res.send(401).send("Token wygasł lub nie istnieje")
+  }
+})
+app.delete('/note/:id', function (req: Request, res: Response) // delete note
+{
+  if(auth(req.headers.authorization ?? "123")){
+  var thisNoteId: number = +req.params.id
+  let note = storage.notes.find(note => note.id == thisNoteId)
+  if (!note)
+    return res.status(404)
+  try {
+    const index = storage.notes.map(object => object.id).indexOf(note.id)
+    storage.notes.splice(index, 1)
+    res.status(200).send('notatka została usunięta')
+  }
+  catch
+  {
+    console.log("nie udało się znaleźć indexu notatki")
+    note ?? res.status(400).send('Notatka nie istnieje')
+  }
+  }
+  else{
+    res.send(401).send("Token wygasł lub nie istnieje")
+  }
+})
+
+
+
+
+app.get('/tags', function (req: Request, res: Response) 
+{
+  if(auth(req.headers.authorization ?? "123")){
+  try {
+    const alltags: Tag[] = []
+    storage.tags.forEach(function (Tag) {
+      alltags.push(Tag)
+    })
+    res.status(200).send(alltags)
+
+  } catch {
+    res.status(400).send("Wymagane pola notatki są puste")
+  }
+  }
+  else{
+    res.send(401).send("Token wygasł lub nie istnieje")
+  }
+})
+app.get('/tag', function (req: Request, res: Response) { 
+  if(auth(req.headers.authorization ?? "123")){
+  var x = storage.tags.find(function (tag: Tag) {
+    if (tag.name == 'TestName') {
+      console.log("test tag was found")
+      return true
     }
-
-    
-    notesArray.push(note)
-    updateStorage()
-    res.send(note)
-    
-})
-
-app.get('/note/:id', function(req:Request, res:Response){
-    
-    const id = +req.params.id
-    if(notesArray.find(note => note.id==id))
-    res.send(notesArray.find(note=>note.id==id))
-    else
-    res.status(404).send("no exist")
-         
-})
-
-app.put('/note/:id', function(req: Request, res:Response){
-    const id = +req.params.id
-    if(notesArray.find(note=> note.id==id)){
-        notesArray[id] = req.body
-        res.send(req.body)
+    else {
+      console.log("test tag wasn't found")
+      return false
     }
-    else    
-        res.send("Note with this id doesn't exists")
-})
-app.delete('/note/:id', function(req: Request, res:Response){
-    const id = +req.params.id
-    if(notesArray.find(note=> note.id==id)){
-        res.send(notesArray.find(note=>note.id==id))
-        notesArray.splice(notesArray.findIndex(note=>note.id==id),1)
-    }
-    else
-    res.send("Note with this id doesn't exists")
+  })
+  res.send(x)
+}
+else{
+  res.send(401).send("Token wygasł lub nie istnieje")
+}
 })
 
-app.get('/notes', function(req:Request, res:Response){
-    res.send(notesArray);
+app.get('/tag/:id', function (req: Request, res: Response) { //get tag by id
+  if(auth(req.headers.authorization ?? "123")){
+  var thisTagId: number = +req.params.id
+  const tag = storage.tags.find(tag => tag.id == thisTagId)
+  tag ?? res.send(404)
+  res.status(200).send(tag)
+  }
+  else{
+    res.send(401).send("Token wygasł lub nie istnieje")
+  }
+})
+app.post('/tag', function (req: Request, res: Response) { //add new tag
+  if(auth(req.headers.authorization ?? "123")){
+  if (req.body.name) {
+
+    const date = new Date()
+    const thistag: Tag = new Tag(req.body.name)
+    storage.tags.push(thistag)
+    res.status(200).send(thistag)
+  }
+  else {
+    res.status(400).send("Wymagane pola tagu są puste")
+  }
+}
+else{
+  res.send(401).send("Token wygasł lub nie istnieje")
+}
+
+})
+app.put('/tag/:id', function (req: Request, res: Response)//change name of tag
+{
+  if(auth(req.headers.authorization ?? "123")){
+  var thisTagId: number = +req.params.id
+  let tag = storage.tags.find(tag => tag.id == thisTagId)
+  if (!tag)
+    return res.status(404)
+  tag.name = req.body.newname
+  
+  res.status(200).send(tag)
+  }
+  else{
+    res.send(401).send("Token wygasł lub nie istnieje")
+  }
+})
+app.delete('/tag/:id', function (req: Request, res: Response) // delete tag
+{
+  if(auth(req.headers.authorization ?? "123")){
+  var thisTagId: number = +req.params.id
+  let tag = storage.tags.find(tag => tag.id == thisTagId)
+  if (!tag)
+    return res.status(404)
+  try {
+    const index = storage.tags.map(object => object.id).indexOf(tag.id)
+    storage.notes.splice(index, 1)
+    res.status(200).send('tag został usunięty')
+  }
+  catch
+  {
+    console.log("nie udało się znaleźć indexu tagu")
+    tag ?? res.status(400).send('Tag nie istnieje')
+  }
+}
+else{
+  res.send(401).send("Token wygasł lub nie istnieje")
+}
 })
 
-app.get('/tag/:id',function(req:Request, res:Response){
-    const id = +req.params.id
-    if(tagsArray.find(tag => tag.id==id))
-    res.send(notesArray.find(tag=>tag.id==id))
-    else
-    res.status(404).send("no exist")
+app.post('/login', function(req: Request, res: Response){ 
+  if(req.body.login && req.body.password){
+  let pass:string = req.body.password
+  let login:string = req.body.login
+  let token:string = User.tokengenerator(login,pass)
+  const newuser: User = new User(token)
+  storage.users.push(newuser)
+  res.status(200).send(token)
+  }
+  else{
+    return res.status(400)
+  }
 })
-app.get('/tags', function(req:Request, res:Response){
-    res.send(tagsArray);
-})
-
 app.listen(3000)
