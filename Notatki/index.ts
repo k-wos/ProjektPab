@@ -28,9 +28,9 @@ function auth(token:string):boolean
 }
 
 
-app.get('/notes', function (req: Request, res: Response) //get list ofdx all notes
+app.get('/notes', function (req: Request, res: Response) 
 {
-  if(auth(req.headers.authorization ?? "123")){
+  
   try {
     
     
@@ -39,13 +39,10 @@ app.get('/notes', function (req: Request, res: Response) //get list ofdx all not
   } catch {
     res.status(400).send("Wymagane pola notatki są puste")
   }
-  }
-  else 
-  {
-    res.status(401).send("Token wygasł lub nie istnieje")
-  }
+  
+  
 })
-app.get('/note', function (req: Request, res: Response) { //get test note
+app.get('/note', function (req: Request, res: Response) {
   if(auth(req.headers.authorization ?? "123")){
   var x = storage.notes.find(function (note: Note) {
     if (note.title == 'TestTitle') {
@@ -64,7 +61,7 @@ else{
 }
 })
 
-app.get('/note/:id', function (req: Request, res: Response) { //get note by id
+app.get('/note/:id', function (req: Request, res: Response) { 
   if(auth(req.headers.authorization ?? "123")){
   var thisNoteId: number = +req.params.id
   const note = storage.notes.find(note => note.id == thisNoteId)
@@ -75,7 +72,7 @@ app.get('/note/:id', function (req: Request, res: Response) { //get note by id
     res.send(401).send("Token wygasł lub nie istnieje")
   }
 })
-app.post('/note', function (req: Request, res: Response) { //add new note
+app.post('/note', function (req: Request, res: Response) { 
   if(auth(req.headers.authorization ?? "123")){
   if (req.body.title && req.body.content) {
 
@@ -100,7 +97,7 @@ else{
 }
 
 })
-app.put('/note/:id', function (req: Request, res: Response)//change title of note
+app.put('/note/:id', function (req: Request, res: Response)
 
 {
   if(auth(req.headers.authorization ?? "123")){
@@ -116,7 +113,7 @@ app.put('/note/:id', function (req: Request, res: Response)//change title of not
     res.send(401).send("Token wygasł lub nie istnieje")
   }
 })
-app.delete('/note/:id', function (req: Request, res: Response) // delete note
+app.delete('/note/:id', function (req: Request, res: Response) 
 {
   if(auth(req.headers.authorization ?? "123")){
   var thisNoteId: number = +req.params.id
@@ -179,7 +176,7 @@ else{
 }
 })
 
-app.get('/tag/:id', function (req: Request, res: Response) { //get tag by id
+app.get('/tag/:id', function (req: Request, res: Response) { 
   if(auth(req.headers.authorization ?? "123")){
   var thisTagId: number = +req.params.id
   const tag = storage.tags.find(tag => tag.id == thisTagId)
@@ -190,7 +187,7 @@ app.get('/tag/:id', function (req: Request, res: Response) { //get tag by id
     res.send(401).send("Token wygasł lub nie istnieje")
   }
 })
-app.post('/tag', function (req: Request, res: Response) { //add new tag
+app.post('/tag', function (req: Request, res: Response) { 
   if(auth(req.headers.authorization ?? "123")){
   if (req.body.name) {
 
@@ -208,7 +205,7 @@ else{
 }
 
 })
-app.put('/tag/:id', function (req: Request, res: Response)//change name of tag
+app.put('/tag/:id', function (req: Request, res: Response)
 {
   if(auth(req.headers.authorization ?? "123")){
   var thisTagId: number = +req.params.id
@@ -223,7 +220,7 @@ app.put('/tag/:id', function (req: Request, res: Response)//change name of tag
     res.send(401).send("Token wygasł lub nie istnieje")
   }
 })
-app.delete('/tag/:id', function (req: Request, res: Response) // delete tag
+app.delete('/tag/:id', function (req: Request, res: Response) 
 {
   if(auth(req.headers.authorization ?? "123")){
   var thisTagId: number = +req.params.id
